@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Limpeza Pro - Produtos de Limpeza Especializada</title>
+  <meta name="description" content="Produtos de limpeza especializada para ambientes residenciais e comerciais. Qualidade, eficiência e sustentabilidade." />
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      color: #222;
+      line-height: 1.6;
+    }
+    a {
+      color: #00796b;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #004d40;
+    }
+    header {
+      background: #00796b;
+      color: white;
+      padding: 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    nav .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav ul li {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    nav ul li a {
+      padding: 0.25rem 0.5rem;
+    }
+    nav ul li a.active,
+    nav ul li a:hover {
+      border-bottom: 2px solid #ffffff;
+    }
+
+    /* Hero section */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1590080877777-9e1b19d63083?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') no-repeat center/cover;
+      height: 75vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #e0f2f1;
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      margin-bottom: 1rem;
+      max-width: 900px;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      max-width: 700px;
+      font-weight: 500;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+      margin-bottom: 2rem;
+    }
+    .hero button {
+      background-color: #004d40;
+      border: none;
+      color: #e0f2f1;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.75rem 2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgb(0 77 64 / 0.6);
+      transition: background-color 0.3s ease;
+    }
+    .hero button:hover {
+      background-color: #00695c;
+    }
+
+    /* Main content wrapper */
+    main {
+      max-width: 1100px;
+      margin: 3rem auto 5rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Section titles */
+    h2.section-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      text-align: center;
+      color: #00796b;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+
+    /* Products Section */
+    #products {
+      margin-top: 3rem;
+    }
+    .product-filters {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .product-filters button {
+      padding: 0.5rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 2px solid #00796b;
+      border-radius: 25px;
+      background-color: white;
+      color: #00796b;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+    }
+    .product-filters button.active,
+    .product-filters button:hover {
+      background-color: #00796b;
+      color: white;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 2rem;
+    }
+    .product-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 18px rgb(0 0 0 / 0.15);
+    }
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      background: #f5f5f5;
+      padding: 1rem;
+    }
+    .product-info {
+      padding: 1.25rem 1.5rem 1.5rem 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #004d40;
+      margin-bottom: 0.5rem;
+      user-select: none;
+    }
+    .product-category {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #00796b;
+      margin-bottom: 0.75rem;
+      user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .product-description {
+      font-size: 0.95rem;
+      color: #444;
+      flex-grow: 1;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    .product-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #00796b;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    .btn-buy {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      align-self: flex-start;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .btn-buy:hover {
+      background-color: #004d40;
+    }
+
+    /* Features Section */
+    #features {
+      background: #004d40;
+      color: white;
+      padding: 3rem 1rem 4rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 4rem;
+    }
+    .features-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 2.8rem;
+      text-align: center;
+    }
+    .feature {
+      user-select: none;
+    }
+    .feature svg {
+      width: 55px;
+      height: 55px;
+      margin-bottom: 1rem;
+      fill: #a5d6a7;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
+    }
+    .feature h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+    }
+    .feature p {
+      font-size: 1rem;
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+    /* Testimonials Section */
+    #testimonials {
+      max-width: 900px;
+      margin: 0 auto 5rem auto;
+      padding: 0 1rem;
+    }
+    .testimonial-card {
+      background: white;
+      box-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+      padding: 1.75rem 1.75rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 18px rgb(0 0 0 / 0.15);
+    }
+    .testimonial-text {
+      font-style: italic;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: #333;
+      line-height: 1.5;
+      user-select: text;
+    }
+    .testimonial-author {
+      font-weight: 700;
+      color: #00796b;
+      font-size: 1rem;
+      text-align: right;
+      user-select: text;
+    }
+
+    /* Contact Section */
+    #contact {
+      background-color: #e0f2f1;
+      padding: 3rem 1rem 5rem 1rem;
+      border-radius: 12px;
+      max-width: 700px;
+      margin: 0 auto 5rem auto;
+    }
+    #contact h2 {
+      color: #00796b;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      user-select: none;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input, textarea {
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #00796b;
+      border-radius: 8px;
+      resize: vertical;
+      font-family: inherit;
+      user-select: text;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      border-color: #004d40;
+      outline: none;
+    }
+    button[type="submit"] {
+      align-self: center;
+      background-color: #00796b;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border: none;
+      padding: 0.75rem 3rem;
+      border-radius: 25px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: #004d40;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #00796b;
+      color: white;
+      text-align: center;
+      padding: 1.2rem 1rem;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.6rem;
+      }
+      .hero p {
+        font-size: 1.1rem;
+      }
+      nav ul {
+        gap: 1rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Main navigation">
+      <div class="logo" aria-label="Limpeza Pro logo">Limpeza Pro</div>
+      <ul>
+        <li><a href="#hero" class="active" aria-current="page">Início</a></li>
+        <li><a href="#products">Produtos</a></li>
+        <li><a href="#features">Vantagens</a></li>
+        <li><a href="#testimonials">Depoimentos</a></li>
+        <li><a href="#contact">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero" role="banner">
+    <h1>Produtos de Limpeza Especializada para Sua Casa e Empresa</h1>
+    <p>Eficiência, qualidade e sustentabilidade para proteger o que importa.</p>
+    <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" aria-label="Ver produtos">Conheça Nossos Produtos</button>
+  </section>
+
+  <main>
+    <section id="products" aria-labelledby="products-title">
+      <h2 class="section-title" id="products-title">Nossos Produtos</h2>
+      <div class="product-filters" role="tablist" aria-label="Filtrar produtos por categoria">
+        <button type="button" aria-selected="true" class="active" data-filter="all" role="tab" tabindex="0">Todos</button>
+        <button type="button" aria-selected="false" data-filter="residencial" role="tab" tabindex="-1">Residencial</button>
+        <button type="button" aria-selected="false" data-filter="industrial" role="tab" tabindex="-1">Industrial</button>
+        <button type="button" aria-selected="false" data-filter="ecologico" role="tab" tabindex="-1">Ecológico</button>
+        <button type="button" aria-selected="false" data-filter="automotivo" role="tab" tabindex="-1">Automotivo</button>
+      </div>
+      <div class="products-grid" aria-live="polite" aria-relevant="additions removals">
+        <!-- Products will be dynamically inserted here -->
+      </div>
+    </section>
+
+    <section id="features" aria-labelledby="features-title">
+      <h2 class="section-title" id="features-title">Por que escolher a Limpeza Pro?</h2>
+      <div class="features-grid">
+        <article class="feature">
+          <svg aria-hidden="true" viewBox="0 0 64 64"><path d="M32 5a27 27 0 1 0 27 27A27.031 27.031 0 0 0 32 5zm0 50a23 23 0 1 1 23-23 23.026 23.026 0 0 1-23 23zm-7-23a7 7 0 1 1 7 7 7.008 7.008 0 0 1-7-7z"/></svg>
+          <h3>Alta Qualidade</h3>
+          <p>Produtos formulados para máxima eficácia e segurança no uso diário.</p>
+        </article>
+        <article class="feature">
+          <svg aria-hidden="true" viewBox="0 0 64 64"><path d="M47.707 15.293a1 1 0 0 0-1.414 0l-19 19-7.293-7.293a1 1 0 0 0-1.414 1.414l8 8a1 1 0 0 0 1.414 0l20-20a1 1 0 0 0 0-1.414z"/></svg>
+          <h3>Sustentabilidade</h3>
+          <p>Nossos produtos respeitam o meio ambiente, usando ingredientes biodegradáveis.</p>
+        </article>
+        <article class="feature">
+          <svg aria-hidden="true" viewBox="0 0 64 64"><path d="M32 8a24 24 0 1 0 24 24A24.027 24.027 0 0 0 32 8zm0 44a20 20 0 1 1 20-20 20.023 20.023 0 0 1-20 20zm-3-24h-5a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1v8a1 1 0 0 1-2 0v-7z"/></svg>
+          <h3>Inovação</h3>
+          <p>Atualizamos constantemente nossas fórmulas para garantir a melhor performance.</p>
+        </article>
+        <article class="feature">
+          <svg aria-hidden="true" viewBox="0 0 64 64"><path d="M43 21a3 3 0 1 0-3-3 3.003 3.003 0 0 0 3 3zm-9 14a6 6 0 0 0-9.71-4.95 1 1 0 0 0-.58.87v11.22a1 1 0 0 0 2 0V34a4 4 0 0 1 7.71 0v7a1 1 0 0 0 2 0v-7z"/></svg>
+          <h3>Atendimento Especializado</h3>
+          <p>Equipe preparada para aconselhar e entregar soluções personalizadas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="testimonials" aria-labelledby="testimonials-title">
+      <h2 class="section-title" id="testimonials-title">Depoimentos</h2>
+      <article class="testimonial-card" tabindex="0" aria-label="Depoimento de Carlos Silva">
+        <p class="testimonial-text">"Os produtos da Limpeza Pro transformaram completamente a limpeza do meu escritório. Ecológicos e super eficazes!"</p>
+        <footer class="testimonial-author">- Carlos Silva</footer>
+      </article>
+      <article class="testimonial-card" tabindex="0" aria-label="Depoimento de Maria Oliveira">
+        <p class="testimonial-text">"Uso os produtos residenciais e adoro a qualidade e o cheirinho suave que deixam na casa."</p>
+        <footer class="testimonial-author">- Maria Oliveira</footer>
+      </article>
+      <article class="testimonial-card" tabindex="0" aria-label="Depoimento de Pedro Souza">
+        <p class="testimonial-text">"Atendimento excelente e entrega rápida. Produtos industriais que realmente funcionam!"</p>
+        <footer class="testimonial-author">- Pedro Souza</footer>
+      </article>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Fale Conosco</h2>
+      <form id="contact-form" aria-describedby="contact-desc">
+        <p id="contact-desc" style="text-align:center; margin-bottom:1rem; font-style: italic; color: #00796b;">Envie sua mensagem ou pedido de orçamento, responderemos o mais breve possível.</p>
+        <input type="text" id="name" name="name" placeholder="Seu nome" required aria-required="true" aria-label="Seu nome" autocomplete="name" />
+        <input type="email" id="email" name="email" placeholder="Seu e-mail" required aria-required="true" aria-label="Seu endereço de e-mail" autocomplete="email" />
+        <textarea id="message" name="message" rows="5" placeholder="Sua mensagem" required aria-required="true" aria-label="Sua mensagem"></textarea>
+        <button type="submit" aria-label="Enviar mensagem">Enviar</button>
+        <p id="form-status" role="alert" aria-live="polite" style="margin-top:1rem; text-align:center;"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2024 Limpeza Pro. Todos os direitos reservados.
+  </footer>
+
+  <script>
+    // Product data
+    const products = [
+      {
+        id: 1,
+        title: 'Detergente Residencial Concentrado',
+        category: 'residencial',
+        description: 'Detergente de alta performance para uso doméstico. Remove gordura e sujeira com facilidade.',
+        price: 'R$ 18,90',
+        img: 'https://images.unsplash.com/photo-1606761562134-517322ada803?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 2,
+        title: 'Desinfetante Multiuso Industrial',
+        category: 'industrial',
+        description: 'Produto concentrado para limpeza e desinfecção de áreas industriais e comerciais.',
+        price: 'R$ 75,00',
+        img: 'https://images.unsplash.com/photo-1612831455549-8242562c5043?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 3,
+        title: 'Sabão Líquido Ecológico',
+        category: 'ecologico',
+        description: 'Sabão biodegradável e livre de fosfatos. Cuida do seu ambiente e do planeta.',
+        price: 'R$ 32,50',
+        img: 'https://images.unsplash.com/photo-1583132332144-17010c83521c?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 4,
+        title: 'Limpa Vidros Automotivo',
+        category: 'automotivo',
+        description: 'Limpeza perfeita para vidros e espelhos de veículos, sem deixar resíduos.',
+        price: 'R$ 22,30',
+        img: 'https://images.unsplash.com/photo-1489365091240-6a18fc761ec2?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 5,
+        title: 'Desengordurante Industrial',
+        category: 'industrial',
+        description: 'Remove graxa pesada e sujeiras difíceis em ambientes industriais.',
+        price: 'R$ 85,90',
+        img: 'https://images.unsplash.com/photo-1577731330051-f51ccdb0566c?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 6,
+        title: 'Detergente Ecológico para Cozinha',
+        category: 'ecologico',
+        description: 'Produto suave para a pele e ambiente, ideal para limpeza da cozinha.',
+        price: 'R$ 28,00',
+        img: 'https://images.unsplash.com/photo-1516707570263-7c7f1dd21db6?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 7,
+        title: 'Cera Automotiva Protetora',
+        category: 'automotivo',
+        description: 'Dá brilho intenso e protege a pintura do seu veículo contra agentes externos.',
+        price: 'R$ 45,00',
+        img: 'https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=300&q=60'
+      },
+      {
+        id: 8,
+        title: 'Limpeza Pesada Residencial',
+        category: 'residencial',
+        description: 'Produto para remoção de sujeiras profundas em residências, seguro para superfícies diversas.',
+        price: 'R$ 35,90',
+        img: 'https://images.unsplash.com/photo-1625437518452-8d28877bdf7d?auto=format&fit=crop&w=300&q=60'
+      }
+    ];
+
+    const productsContainer = document.querySelector('.products-grid');
+    const filterButtons = document.querySelectorAll('.product-filters button');
+
+    function createProductCard(product) {
+      const card = document.createElement('article');
+      card.className = 'product-card';
+      card.tabIndex = 0;
+      card.setAttribute('aria
