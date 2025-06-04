@@ -1,746 +1,894 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Limpeza Pro - Produtos de Limpeza Especializada</title>
-  <meta name="description" content="Produtos de limpeza especializada para ambientes residenciais e comerciais. Qualidade, eficiência e sustentabilidade." />
-  <style>
-    /* Reset */
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Smart Questions - Quiz Multiplayer Online com Firebase</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #1E1E2F;
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  #app {
+    width: 100%;
+    max-width: 600px;
+    background: #27293d;
+    border-radius: 15px;
+    box-shadow: 0 0 25px #000a24;
+    padding: 20px 30px 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  h1,h2,h3 {
+    margin: 0 0 15px 0;
+    color: #4dc9f6;
+    user-select: none;
+  }
+  button {
+    cursor: pointer;
+    background: #4dc9f6;
+    border: none;
+    border-radius: 50px;
+    color: #1E1E2F;
+    font-weight: 700;
+    padding: 15px 35px;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 18px #2ea1d6;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  button:hover:not(:disabled) {
+    background: #31b5fb;
+  }
+  button:disabled {
+    background: #688da5;
+    cursor: default;
+  }
+  input[type="text"], input[type="number"], textarea {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  input, textarea {
+    background: #3a3f60;
+    color: #eee;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+  }
+  .hidden {
+    display: none !important;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .answer-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .answer-group input[type="text"] {
+    flex-grow: 1;
+  }
+  .radio-label {
+    color: #eee;
+    user-select: none;
+  }
+  .questions-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid #444c6b;
+    border-radius: 12px;
+    padding: 10px 15px;
+    background: #2f344e;
+  }
+  .question-container {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444c6b;
+  }
+  /* Game UI */
+  #question-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  .answer-btn {
+    background: #3a3f60;
+    color: #eee;
+    border: none;
+    border-radius: 40px;
+    padding: 14px 26px;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .answer-btn:hover:not(:disabled) {
+    background: #5682d8;
+  }
+  .answer-btn.correct {
+    background-color: #4CAF50 !important;
+    color: white !important;
+  }
+  .answer-btn.incorrect {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+  .answer-btn:disabled {
+    cursor: default;
+  }
+  #timer-bar {
+    height: 12px;
+    background: #444c6b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  #timer-progress {
+    height: 100%;
+    background: #4dc9f6;
+    width: 100%;
+    transition: width 1s linear;
+  }
+  #timer-text {
+    text-align: right;
+    font-weight: 700;
+    color: #a6c8ff;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  #score-board {
+    background: #2f344e;
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: #93caff;
+    font-weight: 700;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  @media (max-width: 640px) {
+    #app {
+      max-width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      padding: 15px;
     }
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f6f5;
-      color: #222;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    a {
-      color: #00796b;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    a:hover {
-      color: #004d40;
-    }
-    header {
-      background-color: #00796b;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
-    }
-    nav {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-    }
-    .logo {
-      font-size: 2rem;
-      font-weight: 900;
-      color: white;
-      letter-spacing: 2px;
-      user-select: none;
-      cursor: default;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 2rem;
-    }
-    nav ul li {
-      
-    }
-    nav ul li a {
-      color: white;
-      font-weight: 600;
-      font-size: 1rem;
-      padding-bottom: 2px;
-      border-bottom: 2px solid transparent;
-      display: inline-block;
-      transition: border-color 0.3s ease;
-      user-select: none;
-    }
-    nav ul li a.active,
-    nav ul li a:hover {
-      border-bottom-color: #a5d6a7;
-      color: #a5d6a7;
-    }
-    /* Hero Section */
-    #hero {
-      background: url('https://images.unsplash.com/photo-1590080877777-9e1b19d63083?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
-      height: 80vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #e0f2f1;
-      text-align: center;
-      padding: 0 1rem;
-      box-shadow: inset 0 0 120px rgba(0,0,0,0.45);
-    }
-    #hero h1 {
-      font-size: 3.8rem;
-      font-weight: 900;
-      text-shadow: 0 3px 8px rgba(0,0,0,0.7);
-      max-width: 900px;
-      margin-bottom: 1rem;
-    }
-    #hero p {
-      font-size: 1.4rem;
-      font-weight: 600;
-      max-width: 700px;
-      margin-bottom: 3rem;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-    }
-    #hero button {
-      background-color: #a5d6a7;
-      color: #004d40;
-      border: none;
-      padding: 1rem 3rem;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 1.25rem;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgb(165 214 167 / 0.7);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-    }
-    #hero button:hover,
-    #hero button:focus {
-      background-color: #81c784;
-      box-shadow: 0 6px 20px rgb(129 199 132 / 0.9);
-      outline: none;
-    }
-    /* Main Container */
-    main {
-      max-width: 1100px;
-      margin: 4rem auto 6rem;
-      padding: 0 1rem;
-    }
-    h2.section-title {
-      text-align: center;
-      font-size: 2.6rem;
-      font-weight: 900;
-      color: #00796b;
-      margin-bottom: 2rem;
-      letter-spacing: 2px;
-      user-select: none;
-    }
-
-    /* Product Filters */
-    .product-filters {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-    }
-    .product-filters button {
-      padding: 0.65rem 1.6rem;
-      font-size: 1.05rem;
-      font-weight: 700;
-      border-radius: 25px;
-      border: 2px solid #00796b;
-      background-color: white;
-      color: #00796b;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      box-shadow: 0 4px 10px rgb(0 121 107 / 0.2);
-    }
-    .product-filters button.active,
-    .product-filters button:hover {
-      background-color: #00796b;
-      color: white;
-      box-shadow: 0 6px 15px rgb(0 121 107 / 0.6);
-      outline: none;
-    }
-
-    /* Products Grid */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-      gap: 2.8rem;
-    }
-    .product-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 12px 18px rgb(0 0 0 / 0.12);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1);
-      user-select: none;
-      will-change: transform;
-    }
-    .product-card:focus,
-    .product-card:hover {
-      outline: none;
-      transform: translateY(-10px);
-      box-shadow: 0 22px 36px rgb(0 0 0 / 0.20);
-    }
-    .product-image {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-      border-bottom: 4px solid #00796b;
-      background-color: #f7f9f9;
-      transition: transform 0.3s ease;
-    }
-    .product-card:hover .product-image {
-      transform: scale(1.04);
-    }
-    .product-info {
-      padding: 1.5rem 1.8rem 2rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .product-title {
-      font-size: 1.4rem;
-      font-weight: 900;
-      color: #004d40;
-      margin-bottom: 0.4rem;
-      user-select: text;
-    }
-    .product-category {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #00796b;
-      margin-bottom: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      user-select: none;
-    }
-    .product-description {
-      flex-grow: 1;
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 1.3rem;
-      user-select: text;
-      line-height: 1.4;
-    }
-    .product-price {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: #00796b;
-      margin-bottom: 1.6rem;
-      user-select: text;
-    }
-    .btn-buy {
-      background-color: #00796b;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      padding: 0.85rem 2.5rem;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      align-self: flex-start;
-      user-select: none;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 4px 15px rgb(0 121 107 / 0.6);
-    }
-    .btn-buy:hover,
-    .btn-buy:focus {
-      background-color: #004d40;
-      outline: none;
-      box-shadow: 0 6px 20px rgb(0 77 64 / 0.8);
-    }
-
-    /* Features Section */
-    #features {
-      background-color: #004d40;
-      color: white;
-      border-radius: 15px;
-      padding: 3.5rem 2rem 5rem 2rem;
-      margin-top: 5rem;
-      box-shadow: 0 10px 30px rgb(0 0 0 / 0.1);
-    }
-    .features-grid {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-      gap: 3.5rem;
-      text-align: center;
-    }
-    .feature {
-      user-select: none;
-    }
-    .feature svg {
-      width: 65px;
-      height: 65px;
-      fill: #a5d6a7;
-      margin-bottom: 1.25rem;
-      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
-      transition: transform 0.3s ease;
-    }
-    .feature:hover svg,
-    .feature:focus-within svg {
-      transform: scale(1.1);
-      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.3));
-      outline: none;
-    }
-    .feature h3 {
-      font-size: 1.5rem;
-      font-weight: 900;
-      margin-bottom: 1rem;
-      letter-spacing: 1.2px;
-    }
-    .feature p {
-      font-size: 1.06rem;
-      opacity: 0.9;
-      line-height: 1.5;
-      max-width: 320px;
-      margin: 0 auto;
-    }
-
-    /* Testimonials Section */
-    #testimonials {
-      max-width: 900px;
-      margin: 5rem auto 6rem;
-      padding: 0 1rem;
-    }
-    .testimonial-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 14px 18px rgb(0 0 0 / 0.14);
-      padding: 2rem 2.2rem;
-      margin-bottom: 2.5rem;
-      font-style: italic;
-      font-size: 1.1rem;
-      color: #222;
-      transition: box-shadow 0.3s ease;
-      user-select: text;
-    }
-    .testimonial-card:hover,
-    .testimonial-card:focus-within {
-      box-shadow: 0 22px 36px rgb(0 0 0 / 0.25);
-      outline: none;
-    }
-    .testimonial-author {
-      margin-top: 1.3rem;
-      font-weight: 700;
-      color: #00796b;
-      font-size: 1rem;
-      text-align: right;
-      user-select: text;
-    }
-
-    /* Contact Section */
-    #contact {
-      background-color: #e0f2f1;
-      max-width: 700px;
-      margin: 0 auto 6rem;
-      padding: 3rem 2rem 4rem 2rem;
-      border-radius: 15px;
-      box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
-    }
-    #contact h2 {
-      text-align: center;
-      color: #00796b;
-      font-weight: 900;
-      font-size: 2.3rem;
-      margin-bottom: 2rem;
-      letter-spacing: 2px;
-      user-select: none;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-    }
-    input, textarea {
-      font-size: 1.05rem;
-      padding: 1rem 1.2rem;
-      border-radius: 12px;
-      border: 2px solid #00796b;
-      outline-offset: 2px;
-      resize: vertical;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      transition: border-color 0.3s ease;
-      user-select: text;
-    }
-    input:focus, textarea:focus {
-      border-color: #004d40;
-      outline: none;
-    }
-    textarea {
-      min-height: 140px;
-    }
-    button[type="submit"] {
-      background-color: #00796b;
-      color: white;
-      font-weight: 900;
-      font-size: 1.15rem;
-      padding: 1rem 0;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 5px 18px rgb(0 121 107 / 0.7);
-    }
-    button[type="submit"]:hover,
-    button[type="submit"]:focus {
-      background-color: #004d40;
-      outline: none;
-      box-shadow: 0 7px 22px rgb(0 77 64 / 0.9);
-    }
-    #form-status {
-      font-weight: 700;
-      font-size: 1rem;
-      text-align: center;
-      color: #004d40;
-      min-height: 1.4rem;
-      user-select: none;
-      border-radius: 8px;
-      padding: 0.3rem 0.6rem;
-    }
-    #form-status.error {
-      color: #b71c1c;
-    }
-
-    /* Footer */
-    footer {
-      background-color: #00796b;
-      color: white;
-      font-weight: 600;
-      text-align: center;
-      font-size: 1rem;
-      padding: 1rem 1rem;
-      user-select: none;
-      letter-spacing: 0.04em;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      nav ul {
-        gap: 1rem;
-      }
-      #hero h1 {
-        font-size: 2.8rem;
-      }
-      #hero p {
-        font-size: 1.15rem;
-      }
-      .product-info {
-        padding: 1.1rem 1.2rem 1.6rem 1.2rem;
-      }
-      .btn-buy {
-        font-size: 1rem;
-        padding: 0.7rem 2rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <nav aria-label="Navegação principal">
-      <div class="logo" aria-label="Logotipo Limpeza Pro">Limpeza Pro</div>
-      <ul>
-        <li><a href="#hero" class="active" aria-current="page">Início</a></li>
-        <li><a href="#products">Produtos</a></li>
-        <li><a href="#features">Vantagens</a></li>
-        <li><a href="#testimonials">Depoimentos</a></li>
-        <li><a href="#contact">Contato</a></li>
-      </ul>
-    </nav>
-  </header>
+  <div id="app" role="main" aria-live="polite" aria-atomic="true">
+    <!-- Screens -->
+    <section id="screen-auth">
+      <h1>Smart Questions</h1>
+      <p>Escolha seu papel:</p>
+      <button id="btn-owner">Sou o Dono da Sala</button>
+      <button id="btn-player">Entrar como Jogador</button>
+    </section>
 
-  <section id="hero" role="banner">
-    <h1>Especialistas em Produtos de Limpeza para sua Casa e Empresa</h1>
-    <p>Qualidade, eficiência e sustentabilidade pensadas para você.</p>
-    <button aria-label="Ver produtos" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'});">Conheça Nossos Produtos</button>
-  </section>
-
-  <main>
-    <section id="products" aria-labelledby="products-title">
-      <h2 class="section-title" id="products-title">Produtos em Destaque</h2>
-      <div class="product-filters" role="tablist" aria-label="Filtrar produtos por categoria">
-        <button type="button" role="tab" aria-selected="true" class="active" data-filter="all" tabindex="0">Todos</button>
-        <button type="button" role="tab" aria-selected="false" data-filter="residencial" tabindex="-1">Residencial</button>
-        <button type="button" role="tab" aria-selected="false" data-filter="industrial" tabindex="-1">Industrial</button>
-        <button type="button" role="tab" aria-selected="false" data-filter="ecologico" tabindex="-1">Ecológico</button>
-        <button type="button" role="tab" aria-selected="false" data-filter="automotivo" tabindex="-1">Automotivo</button>
+    <section id="screen-owner-create" class="hidden" aria-label="Dono da sala cria quiz">
+      <h2>Crie sua Sala e Perguntas</h2>
+      <label for="owner-room-name">Nome da Sala (único):</label>
+      <input type="text" id="owner-room-name" placeholder="Exemplo: MinhaSala123" />
+      <div class="questions-list" id="owner-questions-list" aria-live="polite" aria-relevant="additions removals"></div>
+      <button id="owner-add-question">Adicionar Pergunta</button>
+      <div style="margin-top:10px;">
+        <button id="owner-save-room" disabled>Salvar Sala</button>
+        <button id="owner-start-quiz" disabled>Iniciar Quiz</button>
       </div>
-      <div class="products-grid" aria-live="polite" aria-atomic="true" aria-relevant="additions removals"></div>
+      <p id="owner-status" aria-live="polite" style="margin-top: 10px; color:#f44336;"></p>
     </section>
 
-    <section id="features" aria-labelledby="features-title" tabindex="0">
-      <h2 class="section-title" id="features-title">Por que escolher a Limpeza Pro?</h2>
-      <div class="features-grid">
-        <article class="feature" tabindex="0" aria-label="Alta Qualidade">
-          <svg aria-hidden="true" viewBox="0 0 64 64" focusable="false"><path d="M32 5a27 27 0 1 0 27 27A27.031 27.031 0 0 0 32 5zm0 50a23 23 0 1 1 23-23 23.026 23.026 0 0 1-23 23zm-7-23a7 7 0 1 1 7 7 7.008 7.008 0 0 1-7-7z"/></svg>
-          <h3>Alta Qualidade</h3>
-          <p>Produtos formulados para máxima eficácia e segurança no uso diário.</p>
-        </article>
-        <article class="feature" tabindex="0" aria-label="Sustentabilidade">
-          <svg aria-hidden="true" viewBox="0 0 64 64" focusable="false"><path d="M47.707 15.293a1 1 0 0 0-1.414 0l-19 19-7.293-7.293a1 1 0 0 0-1.414 1.414l8 8a1 1 0 0 0 1.414 0l20-20a1 1 0 0 0 0-1.414z"/></svg>
-          <h3>Sustentabilidade</h3>
-          <p>Nossos produtos respeitam o meio ambiente, usando ingredientes biodegradáveis.</p>
-        </article>
-        <article class="feature" tabindex="0" aria-label="Inovação">
-          <svg aria-hidden="true" viewBox="0 0 64 64" focusable="false"><path d="M32 8a24 24 0 1 0 24 24A24.027 24.027 0 0 0 32 8zm0 44a20 20 0 1 1 20-20 20.023 20.023 0 0 1-20 20zm-3-24h-5a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1v8a1 1 0 0 1-2 0v-7z"/></svg>
-          <h3>Inovação</h3>
-          <p>Atualizamos constantemente nossas fórmulas para garantir a melhor performance.</p>
-        </article>
-        <article class="feature" tabindex="0" aria-label="Atendimento Especializado">
-          <svg aria-hidden="true" viewBox="0 0 64 64" focusable="false"><path d="M43 21a3 3 0 1 0-3-3 3.003 3.003 0 0 0 3 3zm-9 14a6 6 0 0 0-9.71-4.95 1 1 0 0 0-.58.87v11.22a1 1 0 0 0 2 0V34a4 4 0 0 1 7.71 0v7a1 1 0 0 0 2 0v-7z"/></svg>
-          <h3>Atendimento Especializado</h3>
-          <p>Equipe preparada para aconselhar e entregar soluções personalizadas.</p>
-        </article>
+    <section id="screen-player-join" class="hidden" aria-label="Jogador entra na sala">
+      <h2>Entrar na Sala</h2>
+      <label for="player-room-code">Código da Sala:</label>
+      <input type="text" id="player-room-code" placeholder="Nome da sala..." />
+      <label for="player-name">Seu Nome:</label>
+      <input type="text" id="player-name" placeholder="Nome para exibição" />
+      <button id="player-join-btn">Entrar na Sala</button>
+      <p id="player-status" aria-live="polite" style="margin-top:10px; color:#f44336;"></p>
+    </section>
+
+    <section id="screen-owner-lobby" class="hidden" aria-label="Lobby dono da sala">
+      <h2>Sala: <span id="owner-lobby-room-name"></span></h2>
+      <div id="owner-player-list" style="margin-bottom:15px; color:#ccc; font-weight:600;">Jogadores conectados: <span id="owner-players-count">0</span></div>
+      <button id="owner-begin-quiz">Iniciar Quiz</button>
+    </section>
+
+    <section id="screen-player-waiting" class="hidden" aria-label="Jogador aguardando inicio">
+      <h2>Você está na sala: <span id="player-lobby-room-name"></span></h2>
+      <p>Aguarde o dono iniciar o quiz...</p>
+    </section>
+
+    <section id="screen-quiz" class="hidden" aria-label="Quiz em andamento">
+      <h2 id="quiz-room-title"></h2>
+      <div id="quiz-question-num" aria-live="polite"></div>
+      <div id="quiz-question-text"></div>
+      <div id="quiz-answers"></div>
+      <div id="timer-bar">
+        <div id="timer-progress"></div>
       </div>
+      <div id="timer-text" aria-live="off" style="text-align:right; font-weight:700; user-select:none;"></div>
+      <div id="quiz-scoreboard" style="margin-top:15px; user-select:none; color:#93caff;"></div>
     </section>
 
-    <section id="testimonials" aria-labelledby="testimonials-title">
-      <h2 class="section-title" id="testimonials-title">Depoimentos</h2>
-      <article tabindex="0" class="testimonial-card" aria-label="Depoimento de Carlos Silva">
-        <p>"Os produtos da Limpeza Pro transformaram completamente a limpeza do meu escritório. Ecológicos e super eficazes!"</p>
-        <footer class="testimonial-author">- Carlos Silva</footer>
-      </article>
-      <article tabindex="0" class="testimonial-card" aria-label="Depoimento de Maria Oliveira">
-        <p>"Uso os produtos residenciais e adoro a qualidade e o cheirinho suave que deixam na casa."</p>
-        <footer class="testimonial-author">- Maria Oliveira</footer>
-      </article>
-      <article tabindex="0" class="testimonial-card" aria-label="Depoimento de Pedro Souza">
-        <p>"Atendimento excelente e entrega rápida. Produtos industriais que realmente funcionam!"</p>
-        <footer class="testimonial-author">- Pedro Souza</footer>
-      </article>
+    <section id="screen-result" class="hidden" aria-label="Resultado final">
+      <h2>Quiz Finalizado!</h2>
+      <div id="result-summary"></div>
+      <button id="result-exit">Sair para tela inicial</button>
     </section>
+  </div>
 
-    <section id="contact" aria-labelledby="contact-title">
-      <h2 id="contact-title">Fale Conosco</h2>
-      <form id="contact-form" aria-describedby="contact-desc" novalidate>
-        <p id="contact-desc" style="text-align:center; margin-bottom:1rem; font-style: italic; color: #00796b;">
-          Envie sua mensagem ou pedido de orçamento, responderemos o mais breve possível.
-        </p>
-        <input type="text" id="name" name="name" placeholder="Seu nome" required aria-required="true" aria-label="Seu nome" autocomplete="name" />
-        <input type="email" id="email" name="email" placeholder="Seu e-mail" required aria-required="true" aria-label="Seu e-mail" autocomplete="email" />
-        <textarea id="message" name="message" rows="5" placeholder="Sua mensagem" required aria-required="true" aria-label="Sua mensagem"></textarea>
-        <button type="submit" aria-label="Enviar mensagem">Enviar</button>
-        <p id="form-status" role="alert" aria-live="polite" aria-atomic="true"></p>
-      </form>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2024 Limpeza Pro. Todos os direitos reservados.
-  </footer>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
     (() => {
-      const products = [
-        {
-          id: 1,
-          title: 'Detergente Residencial Concentrado',
-          category: 'residencial',
-          description: 'Detergente de alta performance para uso doméstico. Remove gordura e sujeira com facilidade.',
-          price: 'R$ 18,90',
-          img: 'https://images.unsplash.com/photo-1606761562134-517322ada803?auto=format&fit=crop&w=400&q=60',
-          alt: 'Garrafas de detergente concentrado azul'
-        },
-        {
-          id: 2,
-          title: 'Desinfetante Multiuso Industrial',
-          category: 'industrial',
-          description: 'Produto concentrado para limpeza e desinfecção de áreas industriais e comerciais.',
-          price: 'R$ 75,00',
-          img: 'https://images.unsplash.com/photo-1612831455549-8242562c5043?auto=format&fit=crop&w=400&q=60',
-          alt: 'Potes de desinfetante industrial'
-        },
-        {
-          id: 3,
-          title: 'Sabão Líquido Ecológico',
-          category: 'ecologico',
-          description: 'Sabão biodegradável e livre de fosfatos. Cuida do seu ambiente e do planeta.',
-          price: 'R$ 32,50',
-          img: 'https://images.unsplash.com/photo-1583132332144-17010c83521c?auto=format&fit=crop&w=400&q=60',
-          alt: 'Sabão líquido natural com plantas ao lado'
-        },
-        {
-          id: 4,
-          title: 'Limpa Vidros Automotivo',
-          category: 'automotivo',
-          description: 'Limpeza perfeita para vidros e espelhos de veículos, sem deixar resíduos.',
-          price: 'R$ 22,30',
-          img: 'https://images.unsplash.com/photo-1489365091240-6a18fc761ec2?auto=format&fit=crop&w=400&q=60',
-          alt: 'Produto limpa vidros em frasco azul'
-        },
-        {
-          id: 5,
-          title: 'Desengordurante Industrial',
-          category: 'industrial',
-          description: 'Remove graxa pesada e sujeiras difíceis em ambientes industriais.',
-          price: 'R$ 85,90',
-          img: 'https://images.unsplash.com/photo-1577731330051-f51ccdb0566c?auto=format&fit=crop&w=400&q=60',
-          alt: 'Produto desengordurante em galão industrial'
-        },
-        {
-          id: 6,
-          title: 'Detergente Ecológico para Cozinha',
-          category: 'ecologico',
-          description: 'Produto suave para a pele e ambiente, ideal para limpeza da cozinha.',
-          price: 'R$ 28,00',
-          img: 'https://images.unsplash.com/photo-1516707570263-7c7f1dd21db6?auto=format&fit=crop&w=400&q=60',
-          alt: 'Detergente ecológico com plantas ao fundo'
-        },
-        {
-          id: 7,
-          title: 'Cera Automotiva Protetora',
-          category: 'automotivo',
-          description: 'Dá brilho intenso e protege a pintura do seu veículo contra agentes externos.',
-          price: 'R$ 45,00',
-          img: 'https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=400&q=60',
-          alt: 'Cera automotiva em lata brilhando ao sol'
-        },
-        {
-          id: 8,
-          title: 'Limpeza Pesada Residencial',
-          category: 'residencial',
-          description: 'Produto para remoção de sujeiras profundas em residências, seguro para superfícies diversas.',
-          price: 'R$ 35,90',
-          img: 'https://images.unsplash.com/photo-1625437518452-8d28877bdf7d?auto=format&fit=crop&w=400&q=60',
-          alt: 'Produto de limpeza com espuma branca'
+      // FIREBASE CONFIGURATION - Insira seu config aqui:
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        databaseURL: "YOUR_DB_URL",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MSG_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+      // Element refs
+      const app = document.getElementById('app');
+      const screenAuth = document.getElementById('screen-auth');
+      const screenOwnerCreate = document.getElementById('screen-owner-create');
+      const screenPlayerJoin = document.getElementById('screen-player-join');
+      const screenOwnerLobby = document.getElementById('screen-owner-lobby');
+      const screenPlayerWaiting = document.getElementById('screen-player-waiting');
+      const screenQuiz = document.getElementById('screen-quiz');
+      const screenResult = document.getElementById('screen-result');
+
+      const btnOwner = document.getElementById('btn-owner');
+      const btnPlayer = document.getElementById('btn-player');
+
+      const ownerRoomNameInput = document.getElementById('owner-room-name');
+      const ownerQuestionsList = document.getElementById('owner-questions-list');
+      const ownerAddQuestionBtn = document.getElementById('owner-add-question');
+      const ownerSaveRoomBtn = document.getElementById('owner-save-room');
+      const ownerStartQuizBtn = document.getElementById('owner-start-quiz');
+      const ownerStatus = document.getElementById('owner-status');
+
+      const playerRoomCodeInput = document.getElementById('player-room-code');
+      const playerNameInput = document.getElementById('player-name');
+      const playerJoinBtn = document.getElementById('player-join-btn');
+      const playerStatus = document.getElementById('player-status');
+
+      const ownerLobbyRoomName = document.getElementById('owner-lobby-room-name');
+      const ownerPlayerListElt = document.getElementById('owner-player-list');
+      const ownerPlayersCount = document.getElementById('owner-players-count');
+      const ownerBeginQuizBtn = document.getElementById('owner-begin-quiz');
+
+      const playerLobbyRoomName = document.getElementById('player-lobby-room-name');
+
+      const quizRoomTitle = document.getElementById('quiz-room-title');
+      const quizQuestionNum = document.getElementById('quiz-question-num');
+      const quizQuestionText = document.getElementById('quiz-question-text');
+      const quizAnswers = document.getElementById('quiz-answers');
+      const timerBar = document.getElementById('timer-bar');
+      const timerProgress = document.getElementById('timer-progress');
+      const timerText = document.getElementById('timer-text');
+      const quizScoreboard = document.getElementById('quiz-scoreboard');
+
+      const resultSummary = document.getElementById('result-summary');
+      const resultExitBtn = document.getElementById('result-exit');
+
+      // Variables to track state
+      let userRole = null; // 'owner' or 'player'
+      let currentRoomCode = null;
+      let currentUsername = null;
+      let currentRoomData = null;
+      let currentQuestionIndex = 0;
+      let timerInterval = null;
+      let timePerQuestion = 15;
+      let timeLeft = timePerQuestion;
+      let hasAnsweredCurrent = false;
+
+      // Utility functions for UI control
+      function showScreen(screen) {
+        [screenAuth,screenOwnerCreate,screenPlayerJoin,screenOwnerLobby,screenPlayerWaiting,screenQuiz,screenResult].forEach(s => s.classList.add('hidden'));
+        screen.classList.remove('hidden');
+      }
+
+      // OWNER FLOW
+      btnOwner.addEventListener('click', () => {
+        userRole = 'owner';
+        resetOwnerCreate();
+        showScreen(screenOwnerCreate);
+      });
+
+      btnPlayer.addEventListener('click', () => {
+        userRole = 'player';
+        resetPlayerJoin();
+        showScreen(screenPlayerJoin);
+      });
+
+      // Owner - Questions data structure in memory
+      let ownerQuestions = [];
+
+      // Helper to create question block UI with inputs
+      function createQuestionBlock(idx, questionObj = null) {
+        const container = document.createElement('div');
+        container.classList.add('question-container');
+
+        const qLabel = document.createElement('label');
+        qLabel.textContent = `Pergunta ${idx + 1}:`;
+        container.appendChild(qLabel);
+
+        const qInput = document.createElement('textarea');
+        qInput.placeholder = 'Digite a pergunta aqui';
+        qInput.rows = 2;
+        qInput.spellcheck = false;
+        qInput.value = questionObj ? questionObj.text : '';
+        container.appendChild(qInput);
+
+        const answersContainer = document.createElement('div');
+        answersContainer.style.marginTop = '8px';
+
+        ['A','B','C','D'].forEach((label,i) => {
+          const ansDiv = document.createElement('div');
+          ansDiv.classList.add('answer-group');
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = `correct-answer-${idx}`;
+          radio.id = `q${idx}-ans${i}`;
+          radio.checked = questionObj ? questionObj.correctIndex === i : i===0;
+
+          const radioLabel = document.createElement('label');
+          radioLabel.classList.add('radio-label');
+          radioLabel.setAttribute('for', radio.id);
+          radioLabel.textContent = label;
+
+          const ansInput = document.createElement('input');
+          ansInput.type = 'text';
+          ansInput.placeholder = `Resposta ${label}`;
+          ansInput.value = questionObj ? questionObj.answers[i] || '' : '';
+          ansInput.autocomplete = 'off';
+
+          ansDiv.appendChild(radio);
+          ansDiv.appendChild(radioLabel);
+          ansDiv.appendChild(ansInput);
+          answersContainer.appendChild(ansDiv);
+        });
+
+        container.appendChild(answersContainer);
+
+        // Remove question button except first question
+        if(idx > 0){
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = 'Remover Pergunta';
+          removeBtn.style.marginTop = '6px';
+          removeBtn.style.backgroundColor = '#f44336';
+          removeBtn.style.color = '#fff';
+          removeBtn.style.padding = '6px 12px';
+          removeBtn.style.borderRadius = '30px';
+          removeBtn.style.border = 'none';
+          removeBtn.style.cursor = 'pointer';
+          removeBtn.addEventListener('click', () => {
+            ownerQuestionsList.removeChild(container);
+            ownerQuestions.splice(idx,1);
+            refreshOwnerQuestionsUI();
+            validateOwnerInputs();
+          });
+          container.appendChild(removeBtn);
         }
-      ];
 
-      const container = document.querySelector('.products-grid');
-      const filterButtons = document.querySelectorAll('.product-filters button');
-
-      function renderProducts(filter) {
-        container.innerHTML = '';
-        const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-        if (filtered.length === 0) {
-          container.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#555; font-weight:700;">Nenhum produto encontrado para esta categoria.</p>`;
-          return;
+        // Input events update array and validate
+        function updateData(){
+          ownerQuestions[idx] = {
+            text: qInput.value.trim(),
+            answers: Array.from(container.querySelectorAll('input[type="text"]')).map(el=>el.value.trim()),
+            correctIndex: Array.from(container.querySelectorAll('input[type="radio"]')).findIndex(r=>r.checked)
+          };
+          validateOwnerInputs();
         }
-        filtered.forEach(product => {
-          const card = document.createElement('article');
-          card.className = 'product-card';
-          card.tabIndex = 0;
-          card.setAttribute('aria-label', `${product.title}, categoria ${product.category}, preço ${product.price}`);
+        qInput.addEventListener('input', updateData);
+        container.querySelectorAll('input[type="text"]').forEach(el=>el.addEventListener('input',updateData));
+        container.querySelectorAll('input[type="radio"]').forEach(el=>el.addEventListener('change',updateData));
 
-          card.innerHTML = `
-            <img src="${product.img}" alt="${product.alt}" loading="lazy" class="product-image" />
-            <div class="product-info">
-              <h3 class="product-title">${product.title}</h3>
-              <div class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</div>
-              <p class="product-description">${product.description}</p>
-              <div class="product-price">${product.price}</div>
-              <button class="btn-buy" aria-label="Comprar ${product.title}">Comprar</button>
-            </div>
-          `;
-          container.appendChild(card);
+        return container;
+      }
+
+      // Refresh UI questions list from array ownerQuestions
+      function refreshOwnerQuestionsUI(){
+        ownerQuestionsList.innerHTML = '';
+        ownerQuestions.forEach((q,i) => {
+          const block = createQuestionBlock(i,q);
+          ownerQuestionsList.appendChild(block);
         });
       }
 
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          // Update active button
-          filterButtons.forEach(b => {
-            b.classList.remove('active');
-            b.setAttribute('aria-selected', 'false');
-            b.tabIndex = -1;
+      // Validate inputs before allow save / start quiz
+      function validateOwnerInputs(){
+        const roomName = ownerRoomNameInput.value.trim();
+        if(roomName.length < 3){
+          ownerStatus.textContent = 'Nome da sala deve ter ao menos 3 caracteres.';
+          ownerSaveRoomBtn.disabled = true;
+          ownerStartQuizBtn.disabled = true;
+          return false;
+        }
+        if(ownerQuestions.length < 1){
+          ownerStatus.textContent = 'Adicione ao menos uma pergunta.';
+          ownerSaveRoomBtn.disabled = true;
+          ownerStartQuizBtn.disabled = true;
+          return false;
+        }
+        for(let q of ownerQuestions){
+          if(!q.text || q.text.length < 5){
+            ownerStatus.textContent = 'Todas as perguntas devem ter ao menos 5 caracteres.';
+            ownerSaveRoomBtn.disabled = true;
+            ownerStartQuizBtn.disabled = true;
+            return false;
+          }
+          if(!q.answers || q.answers.length !== 4 || q.answers.some(a=>!a)){
+            ownerStatus.textContent = 'Todas as perguntas devem ter 4 respostas preenchidas.';
+            ownerSaveRoomBtn.disabled = true;
+            ownerStartQuizBtn.disabled = true;
+            return false;
+          }
+          if(typeof q.correctIndex !== 'number' || q.correctIndex < 0 || q.correctIndex > 3){
+            ownerStatus.textContent = 'Escolha a resposta correta para cada pergunta.';
+            ownerSaveRoomBtn.disabled = true;
+            ownerStartQuizBtn.disabled = true;
+            return false;
+          }
+        }
+        ownerStatus.textContent = '';
+        ownerSaveRoomBtn.disabled = false;
+        ownerStartQuizBtn.disabled = false;
+        return true;
+      }
+
+      // Add new empty question
+      ownerAddQuestionBtn.addEventListener('click', () => {
+        ownerQuestions.push({
+          text: '',
+          answers: ['','','',''],
+          correctIndex: 0
+        });
+        refreshOwnerQuestionsUI();
+        validateOwnerInputs();
+      });
+
+      // Initialize with one question
+      ownerAddQuestionBtn.click();
+
+      // Save room data to Firebase Realtime Database
+      ownerSaveRoomBtn.addEventListener('click', () => {
+        if(!validateOwnerInputs()) return;
+        const roomName = ownerRoomNameInput.value.trim();
+        const roomRef = database.ref(`rooms/${roomName}`);
+
+        // Check if room exists
+        roomRef.get().then(snapshot => {
+          if(snapshot.exists()){
+            if(!confirm("Já existe uma sala com esse nome. Deseja sobrescrevê-la?")){
+              return;
+            }
+          }
+          // Save room data including questions and initial quiz state
+          roomRef.set({
+            ownerId: null, // Sem autenticação, fica null
+            questions: ownerQuestions,
+            currentQuestion: -1,
+            quizStarted: false,
+            players: {}
+          }).then(() => {
+            ownerStatus.style.color = '#4CAF50';
+            ownerStatus.textContent = "Sala salva com sucesso! Agora você pode entrar como dono.";
+            currentRoomCode = roomName;
+            showOwnerLobby(roomName);
+          }).catch(err => {
+            ownerStatus.style.color = '#f44336';
+            ownerStatus.textContent = "Erro ao salvar sala: " + err.message;
           });
-          button.classList.add('active');
-          button.setAttribute('aria-selected', 'true');
-          button.tabIndex = 0;
-          // Render filtered products
-          const filter = button.getAttribute('data-filter');
-          renderProducts(filter);
         });
       });
 
-      // Initial render
-      renderProducts('all');
+      function showOwnerLobby(roomName) {
+        ownerRoomNameInput.value = '';
+        ownerQuestions = [];
+        refreshOwnerQuestionsUI();
+        ownerStatus.textContent = '';
+        ownerSaveRoomBtn.disabled = true;
+        ownerStartQuizBtn.disabled = true;
+        showScreen(screenOwnerLobby);
+        ownerLobbyRoomName.textContent = roomName;
+        currentRoomCode = roomName;
+        listenPlayers(roomName);
+      }
 
-      // Smooth scroll for nav links & update active on scroll
-      const navLinks = document.querySelectorAll('nav ul li a');
-      navLinks.forEach(link => {
-        link.addEventListener('click', ev => {
-          ev.preventDefault();
-          const targetId = link.getAttribute('href').slice(1);
-          const target = document.getElementById(targetId);
-          if (target) {
-            target.scrollIntoView({behavior: 'smooth'});
+      // Listen players list and update UI
+      function listenPlayers(roomName){
+        const playersRef = database.ref(`rooms/${roomName}/players`);
+        playersRef.on('value', snapshot => {
+          const players = snapshot.val() || {};
+          ownerPlayersCount.textContent = Object.keys(players).length;
+          displayPlayersList(players);
+        });
+      }
+
+      function displayPlayersList(players){
+        const names = Object.values(players).map(p=>p.name);
+        ownerPlayerListElt.textContent = `Jogadores conectados: ${names.length > 0 ? names.join(', ') : 'Nenhum'}`;
+      }
+
+      // Owner can start quiz to advance currentQuestion to 0
+      ownerStartQuizBtn.addEventListener('click', () => {
+        if(!currentRoomCode) return;
+        const currentQuestionRef = database.ref(`rooms/${currentRoomCode}/currentQuestion`);
+        const quizStartedRef = database.ref(`rooms/${currentRoomCode}/quizStarted`);
+        quizStartedRef.set(true);
+        currentQuestionRef.set(0);
+        showScreen(screenQuiz);
+        setupQuizRealtimeListeners();
+      });
+
+      // PLAYER FLOW
+      playerJoinBtn.addEventListener('click', () => {
+        const roomCode = playerRoomCodeInput.value.trim();
+        const playerName = playerNameInput.value.trim();
+        playerStatus.textContent = '';
+
+        if(roomCode.length < 3) {
+          playerStatus.textContent = 'Digite um nome de sala válido.';
+          return;
+        }
+        if(playerName.length < 3) {
+          playerStatus.textContent = 'Digite seu nome.';
+          return;
+        }
+
+        const roomRef = database.ref(`rooms/${roomCode}`);
+        roomRef.get().then(snapshot => {
+          if(!snapshot.exists()){
+            playerStatus.textContent = 'Sala não encontrada.';
+            return;
+          }
+          currentRoomCode = roomCode;
+          currentUsername = playerName;
+          const playersRef = roomRef.child('players');
+          const playerId = generatePlayerId();
+          playersRef.child(playerId).set({name: currentUsername});
+
+          // Listeners para remover player na saída da aba/janela
+          window.addEventListener('beforeunload', () => {
+            playersRef.child(playerId).remove();
+          });
+
+          showScreen(screenPlayerWaiting);
+          playerLobbyRoomName.textContent = roomCode;
+
+          listenGameStateForPlayer(roomCode, playerId);
+        });
+      });
+
+      // Escuta atualizações do quiz para jogador e exibe perguntas
+      function listenGameStateForPlayer(roomCode, playerId){
+        const roomRef = database.ref(`rooms/${roomCode}`);
+
+        // Ouve se o quiz iniciou
+        roomRef.child('quizStarted').on('value', qStartedSnap => {
+          const started = qStartedSnap.val();
+          if(started) {
+            showScreen(screenQuiz);
+            setupQuizRealtimeListenersForPlayer(roomCode, playerId);
           }
         });
-      });
+      }
 
-      // Intersection Observer to highlight nav links on scroll
-      const sections = [...document.querySelectorAll('main section, #hero')];
-      const options = {rootMargin: '-50% 0px -50% 0px', threshold: 0};
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          const id = entry.target.id;
-          const navLink = document.querySelector(`nav ul li a[href="#${id}"]`);
-          if (entry.isIntersecting && navLink) {
-            navLinks.forEach(l => l.classList.remove('active'));
-            navLink.classList.add('active');
-            navLink.setAttribute('aria-current', 'page');
-          } else if (navLink) {
-            navLink.classList.remove('active');
-            navLink.removeAttribute('aria-current');
+      let playerAnsweredCurrent = false;
+      let playerScore = 0;
+
+      function setupQuizRealtimeListenersForPlayer(roomCode, playerId){
+        const currentQuestionRef = database.ref(`rooms/${roomCode}/currentQuestion`);
+        const questionsRef = database.ref(`rooms/${roomCode}/questions`);
+
+        currentQuestionRef.on('value', async snapshot => {
+          const qIndex = snapshot.val();
+
+          if(qIndex === null || qIndex < 0) return;
+
+          playerAnsweredCurrent = false;
+          timeLeft = timePerQuestion;
+          updatePlayerTimer();
+
+          // Carrega pergunta
+          const qSnap = await questionsRef.once('value');
+          const questionsData = qSnap.val();
+
+          if(!questionsData || !questionsData[qIndex]){
+            // Quiz pode ter acabado
+            showScreen(screenResult);
+            const percentScore = playerScore / (questionsData ? questionsData.length : 1);
+            resultSummary.textContent = `Você acertou ${playerScore} de ${questionsData ? questionsData.length : 0} perguntas.`;
+            return;
           }
+
+          displayQuestion(questionsData[qIndex], qIndex);
+
+          // Contador local no player para timer
+          if(timerInterval) clearInterval(timerInterval);
+          timerInterval = setInterval(() => {
+            timeLeft--;
+            updatePlayerTimer();
+            if(timeLeft <= 0){
+              clearInterval(timerInterval);
+              if(!playerAnsweredCurrent) {
+                disableAllAnswers(); // não resposta é considerada errada
+                // Enviar resposta null para pontuar zero
+                sendPlayerAnswer(roomCode, playerId, qIndex, null);
+                // Espera próximo pergunta
+              }
+            }
+          },1000);
         });
-      }, options);
-      sections.forEach(s => observer.observe(s));
+      }
 
-      // Contact form submission simulation
-      const form = document.getElementById('contact-form');
-      const statusMsg = document.getElementById('form-status');
+      function updatePlayerTimer(){
+        timerProgress.style.width = `${(timeLeft/timePerQuestion)*100}%`;
+        timerText.textContent = `Tempo: ${timeLeft}s`;
+      }
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        statusMsg.textContent = '';
-        statusMsg.classList.remove('error');
+      function displayQuestion(questionData, index){
+        quizRoomTitle.textContent = `Sala: ${currentRoomCode}`;
+        quizQuestionNum.textContent = `Pergunta ${index + 1}`;
+        quizQuestionText.textContent = questionData.text;
+        quizAnswers.innerHTML = '';
+        questionData.answers.forEach((ans, i) => {
+          const btn = document.createElement('button');
+          btn.classList.add('answer-btn');
+          btn.textContent = ans;
+          btn.disabled = false;
+          btn.addEventListener('click', () => {
+            if(playerAnsweredCurrent) return;
+            playerAnsweredCurrent = true;
+            clearInterval(timerInterval);
+            // Disable buttons and mark correct/incorrect
+            const correctIndex = questionData.correctIndex;
+            Array.from(quizAnswers.children).forEach((btn, idx) => {
+              btn.disabled = true;
+              if(idx === correctIndex) btn.classList.add('correct');
+              if(idx === i && i !== correctIndex) btn.classList.add('incorrect');
+            });
+            // Envia resposta a Firebase para contar ponto
+            sendPlayerAnswer(currentRoomCode, currentUserId, index, i);
+          });
+          quizAnswers.appendChild(btn);
+        });
+        quizScoreboard.textContent = `Pontuação: ${playerScore}`;
+      }
 
-        const name = form.name.value.trim();
-        const email = form.email.value.trim();
-        const message = form.message.value.trim();
+      function disableAllAnswers(){
+        Array.from(quizAnswers.children).forEach(btn => btn.disabled = true);
+      }
 
-        // Simple email regex
-        const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+      // Gerar ID simples para jogador
+      function generatePlayerId(){
+        return 'p_' + Math.random().toString(36).substr(2,9);
+      }
+      let currentUserId = null;
 
-        if (!name) {
-          statusMsg.textContent = 'Por favor, preencha seu nome.';
-          statusMsg.classList.add('error');
-          form.name.focus();
-          return;
-        }
-        if (!email || !emailRegex.test(email)) {
-          statusMsg.textContent = 'Por favor, informe um e-mail válido.';
-          statusMsg.classList.add('error');
-          form.email.focus();
-          return;
-        }
-        if (!message) {
-          statusMsg.textContent = 'Por favor, escreva sua mensagem.';
-          statusMsg.classList.add('error');
-          form.message.focus();
-          return;
-        }
+      // Enviar resposta do jogador para Firebase
+      function sendPlayerAnswer(roomCode, playerId, questionIndex, answerIndex){
+        currentUserId = playerId;
+        const ansRef = database.ref(`rooms/${roomCode}/answers/${questionIndex}/${playerId}`);
+        ansRef.set(answerIndex);
+      }
 
-        // Fake a send - simulate delay
-        statusMsg.textContent = 'Enviando...';
-        setTimeout(() => {
-          statusMsg.textContent = 'Obrigado pela sua mensagem! Entraremos em contato em breve.';
-          form.reset();
-        }, 1500);
+      // DONO OUVE RESPOSTAS E AVANÇA PERGUNTAS
+      startQuizBtn.addEventListener('click', () => {
+        ownerStartQuizBtn.click(); // dispara a função do botão de start quiz
       });
+
+      ownerBeginQuizBtn.addEventListener('click', () => {
+        // Avança para próxima pergunta ou finaliza
+        if(!currentRoomCode) return;
+        const currentQuestionRef = database.ref(`rooms/${currentRoomCode}/currentQuestion`);
+        currentQuestionRef.get().then(snapshot => {
+          const current = snapshot.val();
+          const questionsRef = database.ref(`rooms/${currentRoomCode}/questions`);
+          questionsRef.get().then(qSnap => {
+            const questions = qSnap.val() || [];
+            if(current === null || current < 0){
+              // Iniciar do começo
+              currentQuestionRef.set(0);
+              resetAnswersForQuestion(0);
+            } else if(current + 1 < questions.length){
+              currentQuestionRef.set(current + 1);
+              resetAnswersForQuestion(current + 1);
+            } else {
+              // Finalizar quiz
+              currentQuestionRef.set(-1);
+              alert('Quiz finalizado.');
+            }
+          });
+        });
+      });
+
+      // Reinicializa respostas para nova pergunta
+      function resetAnswersForQuestion(qIndex){
+        const ansRef = database.ref(`rooms/${currentRoomCode}/answers/${qIndex}`);
+        ansRef.set(null);
+      }
+
+      // Quando dono entra na tela do quiz, cria escuta para exibir estatísticas simples e avisos
+      function setupQuizRealtimeListeners(){
+        if(!currentRoomCode) return;
+        const answersRef = database.ref(`rooms/${currentRoomCode}/answers`);
+        answersRef.on('value', snapshot => {
+          const allAnswers = snapshot.val() || {};
+          // Por simplicidade, somar acertos em cada pergunta
+          // Mostrar quantidade de respostas para dono talvez
+        });
+      }
+      
+      // Eventos para botões
+      btnOwner.addEventListener('click', () => {
+        userRole = 'owner';
+        showScreen(screenOwnerCreate);
+        ownerRoomNameInput.value = '';
+        ownerQuestions = [{
+          text:'',
+          answers:['','','',''],
+          correctIndex:0
+        }];
+        refreshOwnerQuestionsUI();
+        validateOwnerInputs();
+        ownerStatus.textContent = '';
+        ownerSaveRoomBtn.disabled = true;
+        ownerStartQuizBtn.disabled = true;
+      });
+      btnPlayer.addEventListener('click', () => {
+        userRole = 'player';
+        showScreen(screenPlayerJoin);
+        playerRoomCodeInput.value = '';
+        playerNameInput.value = '';
+        playerStatus.textContent = '';
+      });
+      joinRoomBtn.addEventListener('click', () => {
+        playerJoinBtn.click();
+      });
+      resultExitBtn.addEventListener('click', () => {
+        currentRoomCode = null;
+        currentUserId = null;
+        playerScore = 0;
+        playerAnsweredCurrent = false;
+        showScreen(screenAuth);
+      });
+
+      // Inicialização padrão
+      showScreen(screenAuth);
+
+      // Variáveis para dados temporários
+      let ownerQuestions = [];
+
+      function refreshOwnerQuestionsUI(){
+        ownerQuestionsList.innerHTML = '';
+        ownerQuestions.forEach((q,i) => {
+          const block = createQuestionBlock(i,q);
+          ownerQuestionsList.appendChild(block);
+        });
+      }
+      
+      function createQuestionBlock(idx, questionObj){
+        const container = document.createElement('div');
+        container.classList.add('question-container');
+
+        const qLabel = document.createElement('label');
+        qLabel.textContent = `Pergunta ${idx + 1}:`;
+        container.appendChild(qLabel);
+
+        const qInput = document.createElement('textarea');
+        qInput.placeholder = 'Digite a pergunta aqui';
+        qInput.rows = 2;
+        qInput.spellcheck = false;
+        qInput.value = questionObj ? questionObj.text : '';
+        container.appendChild(qInput);
+
+        const answersContainer = document.createElement('div');
+        answersContainer.style.marginTop = '8px';
+
+        ['A','B','C','D'].forEach((label,i) => {
+          const ansDiv = document.createElement('div');
+          ansDiv.classList.add('answer-group');
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = `correct-answer-${idx}`;
+          radio.id = `q${idx}-ans${i}`;
+          radio.checked = questionObj ? questionObj.correctIndex === i : i===0;
+
+          const radioLabel = document.createElement('label');
+          radioLabel.classList.add('radio-label');
+          radioLabel.setAttribute('for', radio.id);
+          radioLabel.textContent = label;
+
+          const ansInput = document.createElement('input');
+          ansInput.type = 'text';
+          ansInput.placeholder = `Resposta ${label}`;
+          ansInput.value = questionObj ? questionObj.answers[i] || '' : '';
+          ansInput.autocomplete = 'off';
+
+          ansDiv.appendChild(radio);
+          ansDiv.appendChild(radioLabel);
+          ansDiv.appendChild(ansInput);
+          answersContainer.appendChild(ansDiv);
+        });
+
+        container.appendChild(answersContainer);
+
+        // Remove question button except first question
+        if(idx > 0){
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = 'Remover Pergunta';
+          removeBtn.style.marginTop = '6px';
+          removeBtn.style.backgroundColor = '#f44336';
+          removeBtn.style.color = '#fff';
+          removeBtn.style.padding = '6px 12px';
+          removeBtn.style.borderRadius = '30px';
+          removeBtn.style.border = 'none';
+          removeBtn.style.cursor = 'pointer';
+          removeBtn.addEventListener('click', () => {
+            ownerQuestionsList.removeChild(container);
+            ownerQuestions.splice(idx,1);
+            refreshOwnerQuestionsUI();
+            validateOwnerInputs();
+          });
+          container.appendChild(removeBtn);
+        }
+
+        // Input events update array and validate
+        function updateData(){
+          ownerQuestions[idx] = {
+            text: qInput.value.trim(),
+            answers: Array.from(container.querySelectorAll('input[type="text"]')).map(el=>el.value.trim()),
+            correctIndex: Array.from(container.querySelectorAll('input[type="radio"]')).findIndex(r=>r.checked)
+          };
+          validateOwnerInputs();
+        }
+        qInput.addEventListener('input', updateData);
+        container.querySelectorAll('input[type="text"]').forEach(el=>el.addEventListener('input',updateData));
+        container.querySelectorAll('input[type="radio"]').forEach(el=>el.addEventListener('change',updateData));
+
+        return container;
+      }
     })();
   </script>
 </body>
